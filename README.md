@@ -6,6 +6,7 @@ A self-hostable, mobile-friendly marking application for Malaysian primary Engli
 
 - Import the original `.xlsx` class namelist. The supplied Lawas-style workbook format (one sheet with `1 CEMERLANG` etc. headings and `BIL` / `NAMA MURID` columns) is supported; all 18 classes can be selected without exposing pupil names in the website source.
 - Attendance checkboxes per class and exam set; absent is different from zero and unmarked.
+- Upload the **complete examination paper** (PDF, DOCX or single-page image) at setup and prepare/review Part 5 labels plus Parts 6–7 questions once per Year + Set. DOCX text can be read locally; automatic PDF/image reading requires the configured AI Worker. Uploaded files are stored privately in the browser; AI extraction is initiated explicitly.
 - Upload **one** 20-question OMR answer-key image per Year / Set; detect key bubbles, correct a wrong key manually, and adjust the eight bubble anchors if necessary.
 - Photograph or upload pupil OMR sheets; automatically try page-corner detection, manually drag four paper corners, apply image perspective rectification, compare shade positions with A/B/C. Messy-but-unambiguous shading can be accepted. Multiple selections, blanks and faint/partially erased selections do not receive marks.
 - Auto and Manual OMR modes without taking another photo. In Manual, the semi-transparent answer scheme is overlaid on the pupil sheet: tap the matching key bubble to award/remove a point. An opacity slider aids comparison.
@@ -34,7 +35,11 @@ GitHub Pages cannot securely hold an OpenAI API key. The included **Cloudflare W
 2. In the `backend` folder, run `npx wrangler login` and `npx wrangler deploy`.
 3. Set the secrets with `npx wrangler secret put OPENAI_API_KEY` and `npx wrangler secret put TEACHER_TOKEN`. Choose a strong unpredictable token (at least 12 characters). Cloudflare may deploy a new version when a secret is added.
 4. Go to app **Settings → AI connection**. Enter the Worker URL, e.g. `https://papermark-ai.YOUR-SUBDOMAIN.workers.dev`, and the teacher token (held in browser `sessionStorage`, not saved to the Excel workbook).
-5. For Part 6/7, upload writing photos **and enter the original examination question/stimulus details**. Press **Grade with AI** then review and **Approve & save score**. Manual scoring works even if AI is unconfigured or offline.
+5. Before marking, go to **Answer scheme → Complete examination paper**, upload the PDF / DOCX / image, optionally **Extract Part 5–7 with AI**, check the task text and picture-cue descriptions, and click **Approve exam tasks & save**. This setup is reused for all pupils in that Year + Set. For Part 6/7, upload writing photos; the app automatically reuses the saved task. Press **Grade with AI** then review and **Approve & save score**. Manual scoring works even if AI is unconfigured or offline.
+
+PDF and scanned-image extraction is an online AI operation, not available when the secure AI backend is unconfigured. Word .docx text is read locally; picture stimuli must be manually reviewed or extracted through the optional AI backend.
+
+Year 2 writing is assessed using the same Part 6 and Part 7 UPDLP category structure and mark allocation, calibrated for Year 2 language expectations; it does not require a separate user-uploaded rubric. AI assessments remain provisional and teacher approval is required.
 
 AI assessment may be inaccurate, including handwriting transcription. Confirm final grades as the teacher. Image submission sends the pupil's writing to the configured AI service: follow your school's pupil-data privacy and parent-consent requirements.
 
@@ -60,3 +65,9 @@ AI assessment may be inaccurate, including handwriting transcription. Confirm fi
 - `app.js` – XLSX reader/export, roster, local storage, camera and marking logic
 - `manifest.webmanifest`, `sw.js`, `icon.svg`, `icon-192.png`, `icon-512.png` – installable/offline PWA
 - `backend/worker.js`, `backend/wrangler.toml` – optional AI backend
+
+## Updated phone interface / existing data
+
+- On narrow screens, the two-column Part 6 and 7 assessment is deliberately stacked vertically: photographs and exam task first, marking panel below. If the site appears as a wide desktop page, turn off **Desktop site** in your mobile browser.
+- Existing saved pupil images, scores, exam schemes and Excel rosters are not deleted by this update. Keep a private backup before replacing deployed files. If an exam was set up previously without a full paper, you may continue manual marking; upload and approve the full paper when you need reliable AI task assessment.
+- The source file is kept locally and downloaded on request. Sending a PDF or Word/image-derived content to the AI extraction endpoint happens only after pressing **Extract Part 5–7 with AI**.
