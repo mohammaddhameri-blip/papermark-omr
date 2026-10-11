@@ -167,4 +167,66 @@ summary{cursor:pointer}
  .context-tools .btn{font-size:12px}
  .writing-lightbox-body{border:1px solid #ffffff30}
 }
-</style></head><body><div class="mobile-nav"><div class="brand"><span class="logo">✓</span>PaperMark</div><button class="btn sm" id="mobile-menu" aria-controls="aside" aria-expanded="false">☰ Menu</button></div><div class="shell"><aside class="side" id="aside"><div class="brand"><span class="logo">✓</span>PaperMark</div><nav id="nav"><button class="nav active" data-page="home">◫ &nbsp; Class overview</button><button class="nav" data-page="scheme">▦ &nbsp; Answer scheme</button><button class="nav" data-page="roster">☑ &nbsp; Attendance</button><button class="nav" data-page="records">▤ &nbsp; Results & export</button><button class="nav" data-page="settings">⚙ &nbsp; Settings</button></nav><div class="side-bottom">Local-first assessment workspace.<br>Student data stays on this device unless you explicitly enable a connected service.</div></aside><main class="content" id="app"><div class="card">Preparing your marking workspace…</div></main></div><button type="button" class="menu-backdrop" id="menu-backdrop" aria-label="Close menu"></button><nav class="mobile-dock" id="mobile-dock" aria-label="Bottom navigation"><button type="button" data-page="home"><span aria-hidden="true">⌂</span><span>Home</span></button><button type="button" data-page="roster"><span aria-hidden="true">☑</span><span>Pupils</span></button><button type="button" data-page="scheme"><span aria-hidden="true">▦</span><span>Setup</span></button><button type="button" data-page="records"><span aria-hidden="true">▤</span><span>Results</span></button></nav><div class="mark-mobile-actions" id="mark-mobile-actions" aria-label="Quick marking controls"></div><div id="toastbox"></div><input class="hide" type="file" id="hidden-file"><script src="app.js"></script></body></html>
+
+/* Guided capture: deliberately focused, thumb-friendly and compact. */
+.quick-steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:0 0 15px}
+.quick-steps span{display:grid;place-items:center;background:#eaf0ed;color:#627571;border-radius:10px;padding:11px 3px;font-weight:800;font-size:12px;min-width:0}
+.quick-steps span.on{background:#153d43;color:#fff}
+.quick-steps span.done{background:#d9f3e5;color:#126747}
+.quick-panel{max-width:820px;margin:0 auto 16px}
+.quick-panel .section-title h2{margin:0}
+.quick-preview{background:#f1f6f3;border:1px solid #dce8e2;border-radius:12px;min-height:160px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin:10px 0 14px;padding:10px}
+.quick-preview>img{width:auto;max-width:100%;max-height:340px;object-fit:contain;border-radius:8px;background:#fff}
+.quick-placeholder{font-size:13px;color:#607a75;line-height:1.6;text-align:center;padding:32px 14px}
+.quick-preview:has(.photo-grid){display:block}
+.quick-preview .photo-grid{grid-template-columns:repeat(auto-fill,minmax(95px,1fr))}
+.quick-capture-actions .btn{flex:1;min-height:48px}
+.quick-footer{max-width:820px;margin:14px auto 0;display:flex;gap:10px;justify-content:flex-end}
+.quick-footer>.btn{min-height:52px;flex:1}
+.quick-footer>.btn.primary{flex:2}
+.quick-tally{display:flex;justify-content:space-between;align-items:center;font-size:15px;padding:15px 3px 2px}
+.quick-summary{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0 16px}
+.quick-summary>div{display:flex;justify-content:space-between;gap:8px;padding:13px 10px;background:#f4f8f5;border-radius:10px;font-size:13px}
+.quick-summary strong{color:#166a58}
+.quick-final-actions{margin-top:16px}
+.quick-review-list{display:grid;gap:10px}
+.quick-review-row{display:flex;gap:12px;align-items:center;justify-content:space-between;border:1px solid #e1ebe5;border-radius:12px;padding:12px}
+.quick-review-name{display:grid;gap:5px;min-width:0}
+.quick-review-name b{font-size:14px}
+.quick-review-name small{color:#637873;font-size:11px;line-height:1.35}
+.roster-quick-actions{flex-wrap:nowrap;gap:5px}
+.roster-quick-actions .btn{padding:7px 10px}
+@media(max-width:1199px){
+ body:has(.quick-footer) .mobile-dock{display:none}
+ body:has(.quick-footer) .mark-mobile-actions{display:none!important}
+ body:has(.quick-footer) .content{padding-bottom:calc(115px + env(safe-area-inset-bottom))}
+ .quick-footer{position:fixed;z-index:83;bottom:0;left:0;right:0;max-width:none;background:#fffffff5;backdrop-filter:blur(10px);border-top:1px solid #dce8e2;box-shadow:0 -4px 17px #102e3320;padding:9px 12px calc(10px + env(safe-area-inset-bottom));margin:0}
+ .quick-steps{gap:4px}
+ .quick-steps span{font-size:11px;padding:9px 2px}
+ .quick-panel{max-width:none}
+ .quick-review-row{align-items:flex-start}
+}
+@media(max-width:680px){
+ .quick-preview>img{max-height:32dvh}
+ .quick-panel .answers{gap:7px}
+ .quick-panel .answer{padding:9px}
+ .quick-review-row{display:grid}
+ .quick-review-row .actions{width:100%;display:flex}
+ .quick-review-row .actions .btn{flex:1}
+ .quick-summary{grid-template-columns:1fr}
+ .quick-summary>div{padding:10px}
+ .roster-quick-actions{justify-content:flex-end}
+ .roster-quick-actions .btn{min-width:0!important;padding:7px 8px;font-size:12px}
+}
+/* Mobile camera views should not inherit the browser's desktop sidebar sizing. */
+@media(pointer:coarse) and (hover:none) and (min-width:1200px){
+ .shell{display:block;max-width:none}
+ .side{display:none!important}
+ .mobile-nav{display:flex!important;position:sticky;top:0;z-index:80;background:#123942;color:#fff;align-items:center;justify-content:space-between;padding:10px}
+ .content{width:100%;max-width:920px;margin:auto;padding:18px 20px 105px}
+ .mobile-dock{display:grid}
+ .grid.cols2{grid-template-columns:minmax(0,1fr)}
+ .card{padding:16px}
+ .quick-steps span{font-size:11px}
+}
+</style></head><body><div class="mobile-nav"><div class="brand"><span class="logo">✓</span>PaperMark</div><button class="btn sm" id="mobile-menu" aria-controls="aside" aria-expanded="false">☰ Menu</button></div><div class="shell"><aside class="side" id="aside"><div class="brand"><span class="logo">✓</span>PaperMark</div><nav id="nav"><button class="nav active" data-page="home">◫ &nbsp; Class overview</button><button class="nav" data-page="scheme">▦ &nbsp; Answer scheme</button><button class="nav" data-page="roster">☑ &nbsp; Attendance</button><button class="nav" data-page="records">▤ &nbsp; Results & export</button><button class="nav" data-page="settings">⚙ &nbsp; Settings</button></nav><div class="side-bottom">Local-first assessment workspace.<br>Student data stays on this device unless you explicitly enable a connected service.</div></aside><main class="content" id="app"><div class="card">Preparing your marking workspace…</div></main></div><button type="button" class="menu-backdrop" id="menu-backdrop" aria-label="Close menu"></button><nav class="mobile-dock" id="mobile-dock" aria-label="Bottom navigation"><button type="button" data-page="home"><span aria-hidden="true">⌂</span><span>Home</span></button><button type="button" data-page="roster"><span aria-hidden="true">☑</span><span>Pupils</span></button><button type="button" data-page="scheme"><span aria-hidden="true">▦</span><span>Setup</span></button><button type="button" data-page="records"><span aria-hidden="true">▤</span><span>Results</span></button></nav><div class="mark-mobile-actions" id="mark-mobile-actions" aria-label="Quick marking controls"></div><div id="toastbox"></div><input class="hide" type="file" id="hidden-file"><script src="app.js?v=8"></script></body></html>
