@@ -153,8 +153,7 @@ function detectA4PaperCorners(img){
  return brighter?.corners||null;
 }
 function defaultA4Corners(img){
- const portrait=img.height>=img.width;
- const aspect=portrait?210/297:297/210;
+ const aspect=210/297;
  const hh=Math.min(img.height*.87,img.width*.89/aspect),ww=hh*aspect;
  const x=(img.width-ww)/2/img.width,y=(img.height-hh)/2/img.height;
  return [[x,y],[1-x,y],[1-x,1-y],[x,1-y]];
@@ -170,7 +169,7 @@ async function makeA4Image(img,corners){
 }
 function reviewA4Crop(img,initialCorners,cb){
  const modal=document.createElement('div');modal.className='cam-modal';
- modal.innerHTML='<div class="cam-card" style="max-width:690px;max-height:96vh;overflow:auto"><div class="row"><b>Adjust A4 crop</b><button class="btn sm" id="a4-cancel">Cancel</button></div><p class="tag">Page edges were unclear. Drag the four corners onto the paper corners, then crop.</p><canvas id="a4-preview" style="width:100%;height:auto;max-height:70vh;object-fit:contain;touch-action:none;background:#e9eeeb;border-radius:10px"></canvas><div class="actions wrap"><button class="btn primary" id="a4-confirm">Crop to A4</button><button class="btn" id="a4-original">Keep original</button></div></div>';
+ modal.innerHTML='<div class="cam-card" style="max-width:690px;max-height:96vh;overflow:auto"><div class="row"><b>Adjust A4 crop</b><button class="btn sm" id="a4-cancel">Cancel</button></div><p class="tag">Page edges were unclear. Drag the four corners onto the paper corners, then crop.</p><canvas id="a4-preview" style="display:block;max-width:100%;max-height:70vh;width:auto;height:auto;margin:auto;touch-action:none;background:#e9eeeb;border-radius:10px"></canvas><div class="actions wrap"><button class="btn primary" id="a4-confirm">Crop to A4</button><button class="btn" id="a4-original">Keep original</button></div></div>';
  document.body.append(modal);
  const canvas=$('#a4-preview',modal),W=img.width,H=img.height;
  canvas.width=W;canvas.height=H;
@@ -202,8 +201,9 @@ function reviewA4Crop(img,initialCorners,cb){
 async function cropCameraA4(file,cb){
  const resized=await resizePhoto(file),img=await imageFromValue(resized),corners=detectA4PaperCorners(img);
  if(corners){
-  const cropped=await makeA4Image(img,corners);
-  await cb(cropped);toast('A4 paper cropped and straightened');return;
+  let cropped=null;
+  try{cropped=await makeA4Image(img,corners)}catch(err){console.warn('Auto A4 crop unavailable:',err)}
+  if(cropped){await cb(cropped);toast('A4 paper cropped and straightened');return}
  }
  reviewA4Crop(img,defaultA4Corners(img),async result=>{
   await cb(result||new File([await (await fetch(resized)).blob()],'original-photo.jpg',{type:'image/jpeg'}));
